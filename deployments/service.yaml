@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: shipyard-api-service
+  namespace: shipyard-dev
+
+spec:
+  selector:
+    app: shipyard-api
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
+  type: ClusterIP

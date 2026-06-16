@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: shipyard-api
+  namespace: shipyard-dev
+  labels:
+    app: shipyard-api
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: shipyard-api
+
+  template:
+    metadata:
+      labels:
+        app: shipyard-api
+
+    spec:
+      containers:
+        - name: shipyard-api
+          image: shipyard-api:v1
+
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: ENVIRONMENT
+              value: development
+
+            - name: VERSION
+              value: v1.0.0
+
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+
+            initialDelaySeconds: 10
+            periodSeconds: 15
